@@ -3,10 +3,23 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
+const endpoints = require("../endpoints.json");
 
 beforeEach(() => seed(data));
 
 afterAll(() => db.end());
+
+describe("GET /api", () => {
+  test("responds with 200 and returns an object describing all available endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual(endpoints);
+        console.log(endpoints);
+      });
+  });
+});
 
 describe("GET /api/topics", () => {
   test("responds with 200 and an array containing data for all topics", () => {
