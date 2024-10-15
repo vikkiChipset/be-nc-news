@@ -4,6 +4,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
+const convertTimestampToDate = require("../db/seeds/utils");
 
 beforeEach(() => seed(data));
 
@@ -52,7 +53,6 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        console.log(body)
         expect(typeof body.article).toBe("object");
         expect(body.article.author).toBe("butter_bridge");
         expect(body.article.title).toBe("Living in the shadow of a great man");
@@ -80,6 +80,42 @@ describe("GET /api/articles/:article_id", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("responds with 200 and an array of article objects", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(Array.isArray(articles)).toBe(true);
+        expect(articles).toHaveLength(13);
+        articles.forEach((article) => {
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+          expect(article).toHaveProperty("comment_count");
+          expect(article).not.toHaveProperty("body");
+        });
+        const sortedArticles = [...articles].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+        expect(articles).toEqual(sortedArticles);
+      });
+  });
+  test("responds 404 with an error message when the endpoint is invalid", () => {
+    return request(app)
+      .get("/api/articlessssss")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Endpoint Does Not Exist");
       });
   });
 });
