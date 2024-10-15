@@ -52,6 +52,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
+        console.log(body)
         expect(typeof body.article).toBe("object");
         expect(body.article.author).toBe("butter_bridge");
         expect(body.article.title).toBe("Living in the shadow of a great man");
