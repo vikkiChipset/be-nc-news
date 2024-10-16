@@ -229,3 +229,90 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("responds with 200 and the updated article when inc_votes is positive", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({
+          article_id: 1,
+          votes: expect.any(Number),
+        });
+        expect(body.article.votes).toBe(101);
+      });
+  });
+  test("responds with 200 and the updated article when inc_votes is negative", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: -1 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({
+          article_id: 1,
+          votes: expect.any(Number),
+        });
+        expect(body.article.votes).toBe(99);
+      });
+  });
+  test("responds with 400 when inc_votes is missing", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request: inc_votes is required");
+      });
+  });
+  test("responds with 400 when inc_votes is not a number", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "not-a-number" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request: inc_votes must be a number");
+      });
+  });
+  test("responds with 404 when article_id is valid but does not exist", () => {
+    return request(app)
+      .patch("/api/articles/999")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+  test("responds with 400 when article_id is invalid", () => {
+    return request(app)
+      .patch("/api/articles/not-a-number")
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request: article_id must be a number");
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("responds with 204 and no content when the comment is successfully deleted", () => {
+    return request(app).delete("/api/comments/4").expect(204);
+  });
+  test("responds with 404 when the comment_id is valid but does not exist", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment not found");
+      });
+  });
+  test("responds with 400 when the comment_id is invalid", () => {
+    return request(app)
+      .delete("/api/comments/invalidID")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid data type");
+      });
+  });
+});
