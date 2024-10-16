@@ -76,7 +76,7 @@ describe("GET /api/articles/:article_id", () => {
   });
   test("responds 404 with an error message when given an article_id is valid, but does not exist", () => {
     return request(app)
-      .get("/api/articles/123")
+      .get("/api/articles/999")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
@@ -116,6 +116,58 @@ describe("GET /api/articles", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Endpoint Does Not Exist");
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("responds with 200 and an array of comments for the given article_id", () => {
+    const article_id = 1;
+    return request(app)
+      .get(`/api/articles/${article_id}/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(Array.isArray(comments)).toBe(true);
+        expect(comments.length).toEqual(11);
+        comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+        });
+        const sortedComments = [...comments].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+        expect(comments).toEqual(sortedComments);
+      });
+  });
+  test("responds with 200 and an empty array when there are no comments for the given article_id", () => {
+    const article_id = 4;
+    return request(app)
+      .get(`/api/articles/${article_id}/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
+      });
+  });
+  test("responds with 404 when the article_id does not exist", () => {
+    const article_id = 999;
+    return request(app)
+      .get(`/api/articles/${article_id}/comments`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+  test("responds with 400 when the article_id is not an integer", () => {
+    return request(app)
+      .get(`/api/articles/invalidID/comments`)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid data type");
       });
   });
 });
