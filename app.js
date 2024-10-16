@@ -9,8 +9,10 @@ const {
   serverErrorHandler,
 } = require("./error-handling");
 const { getArticles } = require("./controllers/articles.controller");
-const { getCommentsByArticleId } = require("./controllers/comments.controller"); 
-
+const {
+  getCommentsByArticleId,
+  postCommentByArticleID,
+} = require("./controllers/comments.controller");
 
 app.use(express.json());
 
@@ -18,7 +20,8 @@ app.get("/api/topics", getTopics);
 app.get("/api", getApi);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
-app.get("/api/articles/:article_id/comments",getCommentsByArticleId)
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+app.post("/api/articles/:article_id/comments", postCommentByArticleID);
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Endpoint Does Not Exist" });

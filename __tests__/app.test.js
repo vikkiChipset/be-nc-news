@@ -4,7 +4,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection");
 const endpoints = require("../endpoints.json");
-const convertTimestampToDate = require("../db/seeds/utils");
+require("jest-sorted");
 
 beforeEach(() => seed(data));
 
@@ -103,11 +103,8 @@ describe("GET /api/articles", () => {
           expect(article).toHaveProperty("article_img_url");
           expect(article).toHaveProperty("comment_count");
           expect(article).not.toHaveProperty("body");
+          expect(articles).toBeSortedBy("created_at", { descending: true });
         });
-        const sortedArticles = [...articles].sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
-        expect(articles).toEqual(sortedArticles);
       });
   });
   test("responds 404 with an error message when the endpoint is invalid", () => {
@@ -137,11 +134,8 @@ describe("GET /api/articles/:article_id/comments", () => {
           expect(comment).toHaveProperty("author");
           expect(comment).toHaveProperty("body");
           expect(comment).toHaveProperty("article_id");
+          expect(comments).toBeSortedBy("created_at", { descending: true });
         });
-        const sortedComments = [...comments].sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
-        expect(comments).toEqual(sortedComments);
       });
   });
   test("responds with 200 and an empty array when there are no comments for the given article_id", () => {
@@ -168,6 +162,70 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid data type");
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("responds with 201 and add a new comment to the the comments with a username and body keys", () => {
+    return request(app)
+      .post(`/api/articles/4/comments`)
+      .send({ username: "butter_bridge", body: "I've been amazed!" })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toMatchObject({
+          author: "butter_bridge",
+          body: "I've been amazed!",
+          article_id: 4,
+          votes: 0,
+          comment_id: expect.any(Number),
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test("responds with 400 when the article_id is not a valid number", () => {
+    return request(app)
+      .post("/api/articles/invalidID/comments")
+      .send({ username: "butter_bridge", body: "This is a comment" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid data type");
+      });
+  });
+  test("responds with 404 when the article_id is valid but does not exist", () => {
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send({ username: "butter_bridge", body: "This is a comment" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+  test("responds with 400 when the username or body is missing from the request body", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({ username: "butter_bridge" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing required fields: username and body");
+      });
+  });
+  test("responds with 400 when the username or body is not of the correct data type", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({ username: 123, body: "My comment here" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid data type for username or body");
+      });
+  });
+  test("responds with 404 when the username does not exist", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({ username: "non_existent_user", body: "My comment here" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
       });
   });
 });
