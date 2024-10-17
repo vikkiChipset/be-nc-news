@@ -2,14 +2,9 @@ const express = require("express");
 const app = express();
 const { getTopics } = require("./controllers/topics.controller");
 const { getApi } = require("./controllers/endpoints.controller");
-const { getArticleById } = require("./controllers/articles.controller");
-const {
-  psqlErrorHandler,
-  customErrorHandler,
-  serverErrorHandler,
-} = require("./error-handling");
 const {
   getArticles,
+  getArticleById,
   patchArticleVotes,
 } = require("./controllers/articles.controller");
 const {
@@ -18,6 +13,11 @@ const {
   deleteCommentById,
 } = require("./controllers/comments.controller");
 const { getUsers } = require("./controllers/users.controller");
+const {
+  psqlErrorHandler,
+  customErrorHandler,
+  serverErrorHandler,
+} = require("./error-handling");
 
 app.use(express.json());
 
