@@ -17,7 +17,9 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  fetchAllArticles()
+  const { sort_by, order } = req.query;
+
+  fetchAllArticles(sort_by, order)
     .then((articles) => {
       res.status(200).send({ articles });
     })
@@ -53,4 +55,3 @@ exports.patchArticleVotes = (req, res, next) => {
       next(err);
     });
 };
-
