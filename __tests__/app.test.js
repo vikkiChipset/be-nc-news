@@ -107,6 +107,39 @@ describe("GET /api/articles", () => {
         });
       });
   });
+  test("responds with 200 and sorts articles by any valid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+  test("responds with 200 and sorts articles in ascending order when order=asc", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+  test("responds with 400 when sort_by column is invalid", () => {
+    return request(app)
+      .get("/api/articles?sort_by=invalid_column")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sort_by query");
+      });
+  });
+  test("responds with 400 when order is invalid", () => {
+    return request(app)
+      .get("/api/articles?order=invalid_order")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid order query");
+      });
+  });
+
   test("responds 404 with an error message when the endpoint is invalid", () => {
     return request(app)
       .get("/api/articlessssss")
