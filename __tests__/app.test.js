@@ -7,7 +7,6 @@ const endpoints = require("../endpoints.json");
 require("jest-sorted");
 
 beforeEach(() => seed(data));
-
 afterAll(() => db.end());
 
 describe("GET /api", () => {
@@ -64,6 +63,8 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.article.article_img_url).toBe(
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
         );
+        expect(body.article).toHaveProperty("comment_count");
+        expect(body.article.comment_count).toBe("11");
       });
   });
   test("responds 400 with an error message for an invalid article type", () => {
