@@ -117,10 +117,10 @@ describe("GET /api/articles", () => {
   });
   test("responds with 200 and sorts articles in ascending order when order=asc", () => {
     return request(app)
-      .get("/api/articles?sort_by=created_at&order=asc")
+      .get("/api/articles?sort_by=votes&order=asc")
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toBeSortedBy("created_at", { ascending: true });
+        expect(body.articles).toBeSortedBy("votes", { ascending: true });
       });
   });
   test("responds with 400 when sort_by column is invalid", () => {
@@ -139,7 +139,34 @@ describe("GET /api/articles", () => {
         expect(body.msg).toBe("Invalid order query");
       });
   });
-
+  test("responds with 200 and filters articles by a valid topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeInstanceOf(Array);
+        expect(body.articles.length).toBeGreaterThan(0);
+        body.articles.forEach((article) => {
+          expect(article.topic).toEqual("mitch");
+        });
+      });
+  });
+  test("responds with 404 when the topic does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=nonexistent_topic")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic not found");
+      });
+  });
+  test("responds with 200 and an empty array when the topic exists but has no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual([]);
+      });
+  });
   test("responds 404 with an error message when the endpoint is invalid", () => {
     return request(app)
       .get("/api/articlessssss")
