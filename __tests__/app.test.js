@@ -289,6 +289,27 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("User not found");
       });
   });
+  test("responds with 201 and ignores unnecessary properties in the request body", () => {
+    return request(app)
+      .post("/api/articles/4/comments")
+      .send({
+        username: "butter_bridge",
+        body: "This is a valid comment",
+        extra_property: "This should be ignored",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toMatchObject({
+          author: "butter_bridge",
+          body: "This is a valid comment",
+          article_id: 4,
+          votes: 0,
+          comment_id: expect.any(Number),
+          created_at: expect.any(String),
+        });
+        expect(body.comment).not.toHaveProperty("extra_property");
+      });
+  });
 });
 
 describe("PATCH /api/articles/:article_id", () => {
