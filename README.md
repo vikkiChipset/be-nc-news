@@ -88,39 +88,35 @@ Ensure you have the following minimum versions installed:
 
 ## Available Endpoints
 **GET /api/topics**
-
 * Retrieves a list of topics.
+
+**GET /api**
+* Retrieves with a list of available endpoints
 
 **GET /api/articles/**
 * Retrieves a single article by article_id.
 
+**GET /api/articles/:article_id**
+* Retrieves with a single article by article_id
+
 **GET /api/articles**
-
-* Retrieves a list of articles with options to sort and filter.
+* Retrieves with a list of articles
   
-**GET /api/articles/comments**
+**GET /api/articles/:article_id/comments**
+* Retrieves with a list of comments by article_id
 
-* Retrieves all comments for a specific article.
-
-**POST /api/articles/comments**
-
+**POST /api/articles/:article_id/comments**
 * Adds a new comment to the specified article.
 
-**PATCH /api/articles/**
+**PATCH /api/articles/:article_id**
+* Updates an article by article_id
 
-* Updates an article (e.g., increment or decrement votes).
-
-**DELETE /api/comments/**
-
+**DELETE /api/comments/:comment_id**
 * Deletes a comment by comment_id.
 
 **GET /api/users**
-
 * Retrieves a list of users.
 
-**GET /api**
-
-* Returns a JSON object listing all available API endpoints and their descriptions.
 
 ## Technologies Used
 * Node.js: JavaScript runtime for server-side development.
