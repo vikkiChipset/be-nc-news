@@ -1,35 +1,125 @@
-# Northcoders News API
-
-Project Setup
-Local Development Setup
-To run this project locally, you will need to set up two environment variable files: .env.development and .env.test. These files will help configure the databases used in the project.
-
-Steps to Set Up Environment Variables:
-1. Create .env.development file:
-
-This file should be in the root directory of your project.
-Add the following line with the appropriate database name for your development environment:
-"PGDATABASE=database_name_here"
-
-2. Create .env.test file:
-
-Similarly, create this file in the root directory.
-Add the following line with the correct database name for the testing environment:
-"PGDATABASE=database_name_here_test"
-
-3. Ensure .env files are git-ignored:
-
-These .env files contain sensitive data and must not be committed to version control.
-The .env.* files are already included in the .gitignore to prevent accidental pushes.
-
-Running the Project Locally:
-Once you've set up the environment variables:
-
-Run npm install to install the necessary dependencies.
-Set up the databases using the provided SQL file (/db/setup.sql) and seed them if needed.
-You can now run your development environment or tests as specified in the package.json scripts.
+# Hello Everyone!
 
 
---- 
+**Welcome to my first backend project, and I'm excited to share it with you.**
 
-This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
+## Hosted Version
+
+You can explore the API at:
+https://be-nc-news-hh3y.onrender.com/api
+
+## Project Summary
+
+The *VikkiChipset’s Backend Project* is a RESTful API built using Node.js, Express, and PostgreSQL. It simulates the backend of a news web application, where users can interact with articles, comments, topics, and users. This project was developed as part of a software development bootcamp to demonstrate skills in backend development, database management, and API design.
+
+## Key Features
+* Retrieve articles, comments, topics, and users.
+* Post new comments on articles.
+* Patch articles to update votes.
+* Delete comments.
+* Sort and filter articles by various criteria.
+
+## Getting Started
+1. Cloning the Repository
+To clone the repository to your local machine, use the following command:
+```
+git clone https://github.com/vikkiChipset/be-nc-news.git
+```
+Navigate into the project folder:
+```
+cd be-nc-news
+```
+2. Install Dependencies
+Install the required dependencies with:
+```
+npm install
+```
+This will install all necessary packages from the package.json file.
+
+3. Environment Variables Setup
+To set up the development environment, create two .env files in the root directory:
+* .env.development
+* .env.test
+
+**.env.development**
+
+Add the following line for your development database:
+PGDATABASE=your_development_db_name
+
+**.env.test**
+
+Add the following line for your test database:
+PGDATABASE=your_test_db_name
+
+Note: Replace your_development_db_name and your_test_db_name with the actual names of your PostgreSQL databases.
+
+4. Database Setup
+
+To set up the databases, use the SQL setup file located in the /db folder.
+
+* Run the following script to set up the databases:
+npm run setup-dbs
+* Seed the development database with initial data:
+npm run seed
+
+5. Running Tests
+To run the test suite using Jest and Supertest, run:
+```
+npm test
+```
+6. Running the Server Locally
+
+To run the API server locally in development mode, use:
+```
+node listen.js
+```
+
+This will start the server on the default port (9090). You can now access the API at http://localhost:9090/api.
+
+## Minimum Requirements
+* Ensure you have the following minimum versions installed:
+* Node.js: v18.0.0 or higher
+* PostgreSQL: v12.0.0 or higher
+
+## Available Endpoints
+**GET /api/topics**
+
+* Retrieves a list of topics.
+
+**GET /api/articles/**
+* Retrieves a single article by article_id.
+
+**GET /api/articles**
+
+* Retrieves a list of articles with options to sort and filter.
+**GET /api/articles/comments**
+
+* Retrieves all comments for a specific article.
+
+**POST /api/articles/comments**
+
+* Adds a new comment to the specified article.
+
+**PATCH /api/articles/**
+
+* Updates an article (e.g., increment or decrement votes).
+
+**DELETE /api/comments/**
+
+* Deletes a comment by comment_id.
+
+**GET /api/users**
+
+* Retrieves a list of users.
+
+**GET /api**
+
+* Returns a JSON object listing all available API endpoints and their descriptions.
+
+## Technologies Used
+* Node.js: JavaScript runtime for server-side development.
+* Express.js: Web framework for Node.js.
+* PostgreSQL: Relational database for storing and querying data.
+* Jest & Supertest: Testing frameworks for unit and integration tests.
+* Node-postgres (pg): PostgreSQL client for interacting with the database.
+
