@@ -1,7 +1,7 @@
 # Hello Everyone!
 
 
-**Welcome to my first backend project, and I'm excited to share it with you.**
+Welcome to my first backend project, and I'm excited to share it with you.
 
 ## Hosted Version
 
@@ -10,7 +10,7 @@ https://be-nc-news-hh3y.onrender.com/api
 
 ## Project Summary
 
-The *VikkiChipset’s Backend Project* is a RESTful API built using Node.js, Express, and PostgreSQL. It simulates the backend of a news web application, where users can interact with articles, comments, topics, and users. This project was developed as part of a software development bootcamp to demonstrate skills in backend development, database management, and API design.
+The ****VikkiChipset’s Backend Project**** is a RESTful API built using Node.js, Express, and PostgreSQL. It simulates the backend of a news web application, where users can interact with articles, comments, topics, and users. This project was developed as part of a software development bootcamp to demonstrate skills in backend development, database management, and API design.
 
 ## Key Features
 * Retrieve articles, comments, topics, and users.
@@ -51,16 +51,20 @@ PGDATABASE=your_development_db_name
 Add the following line for your test database:
 PGDATABASE=your_test_db_name
 
-Note: Replace your_development_db_name and your_test_db_name with the actual names of your PostgreSQL databases.
+***Note: Replace your_development_db_name and your_test_db_name with the actual names of your PostgreSQL databases.***
 
 4. Database Setup
 
 To set up the databases, use the SQL setup file located in the /db folder.
 
 * Run the following script to set up the databases:
+```
 npm run setup-dbs
+```
 * Seed the development database with initial data:
+```
 npm run seed
+```
 
 5. Running Tests
 To run the test suite using Jest and Supertest, run:
@@ -77,7 +81,8 @@ node listen.js
 This will start the server on the default port (9090). You can now access the API at http://localhost:9090/api.
 
 ## Minimum Requirements
-* Ensure you have the following minimum versions installed:
+
+Ensure you have the following minimum versions installed:
 * Node.js: v18.0.0 or higher
 * PostgreSQL: v12.0.0 or higher
 
@@ -92,6 +97,7 @@ This will start the server on the default port (9090). You can now access the AP
 **GET /api/articles**
 
 * Retrieves a list of articles with options to sort and filter.
+  
 **GET /api/articles/comments**
 
 * Retrieves all comments for a specific article.
